@@ -1,0 +1,21 @@
+{
+	"name": "wardrobe-web",
+	"version": "0.0.1",
+	"main": "index.js",
+	"repository": "https://github.com/briceduke/wardrobe-web",
+	"author": "Brice Duke",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"c": "git add . && cz",
+		"p": "git add . && cz && git push"
+	},
+	"devDependencies": {
+		"cz-conventional-changelog": "3.3.0"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	}
+}
