@@ -7,15 +7,27 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
 		"c": "git add . && cz",
 		"p": "git add . && cz && git push"
 	},
 	"devDependencies": {
+		"@types/react": "^18.0.1",
+		"@types/react-redux": "^7.1.23",
 		"cz-conventional-changelog": "3.3.0"
 	},
 	"config": {
 		"commitizen": {
 			"path": "./node_modules/cz-conventional-changelog"
 		}
+	},
+	"dependencies": {
+		"@reduxjs/toolkit": "^1.8.1",
+		"next": "^12.1.4",
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0",
+		"react-redux": "^7.2.8"
 	}
 }
