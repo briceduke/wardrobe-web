@@ -6,6 +6,7 @@
 	"author": "Brice Duke",
 	"license": "MIT",
 	"private": true,
+	"proxy": "http://localhost:6969",
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
