@@ -1,8 +1,13 @@
 import { Field, Form, Formik } from 'formik';
 import { NextPage } from 'next';
+import Router from 'next/router';
 import * as Yup from 'yup';
 
+import { useAppDispatch } from '../../app/hooks';
 import { DefaultLayout } from '../../components/layouts/DefaultLayout';
+import { useLoginMutation } from '../../features/auth/auth.api';
+import { setAuth } from '../../features/auth/auth.slice';
+import { User } from '../../models/User';
 
 const LoginSchema = Yup.object().shape({
 	email: Yup.string().email("Invalid email!").required("Required"),
@@ -10,13 +15,22 @@ const LoginSchema = Yup.object().shape({
 });
 
 const LoginPage: NextPage = () => {
+	const [login] = useLoginMutation();
+	const dispatch = useAppDispatch();
+
 	return (
 		<DefaultLayout title="Login">
 			<Formik
 				initialValues={{ email: "", password: "" }}
 				validationSchema={LoginSchema}
 				onSubmit={(values, { setSubmitting }) => {
-					setTimeout(() => {
+					setTimeout(async () => {
+						const res = (await login(values)) as { data: User };
+
+						dispatch(setAuth({ user: res.data }));
+
+						Router.push("/");
+
 						setSubmitting(false);
 					}, 1000);
 				}}
