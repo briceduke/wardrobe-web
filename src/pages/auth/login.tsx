@@ -1,6 +1,7 @@
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { NextPage } from 'next';
 import Router from 'next/router';
+import { useState } from 'react';
 import * as Yup from 'yup';
 
 import { useAppDispatch } from '../../app/hooks';
@@ -8,6 +9,11 @@ import { DefaultLayout } from '../../components/layouts/DefaultLayout';
 import { useLoginMutation } from '../../features/auth/auth.api';
 import { setAuth } from '../../features/auth/auth.slice';
 import { User } from '../../models/User';
+
+export interface LoginPayload {
+	email: string;
+	password: string;
+}
 
 const LoginSchema = Yup.object().shape({
 	email: Yup.string().email("Invalid email!").required("Required"),
@@ -18,18 +24,32 @@ const LoginPage: NextPage = () => {
 	const [login] = useLoginMutation();
 	const dispatch = useAppDispatch();
 
+	const [serverError, setServerError] = useState("");
+
 	return (
 		<DefaultLayout title="Login">
 			<Formik
 				initialValues={{ email: "", password: "" }}
 				validationSchema={LoginSchema}
-				onSubmit={(values, { setSubmitting }) => {
+				onSubmit={(
+					values: LoginPayload,
+					{ setSubmitting }: FormikHelpers<LoginPayload>
+				) => {
 					setTimeout(async () => {
-						const res = (await login(values)) as { data: User };
+						const res = (await login(values)) as {
+							data?: User;
+							error: { statusCode: number; message: string; error: string };
+						};
 
-						dispatch(setAuth({ user: res.data }));
+						if (res.error) {
+							setServerError("Invalid credentials!");
+						}
 
-						Router.push("/");
+						if (res.data) {
+							dispatch(setAuth({ user: res.data }));
+
+							Router.push("/");
+						}
 
 						setSubmitting(false);
 					}, 1000);
@@ -68,6 +88,12 @@ const LoginPage: NextPage = () => {
 						>
 							Login
 						</button>
+
+						{serverError && (
+							<div className="text-error">
+								<p>{serverError}</p>
+							</div>
+						)}
 					</Form>
 				)}
 			</Formik>
