@@ -11,12 +11,12 @@ import { setAuth } from '../../features/auth/auth.slice';
 import { User } from '../../models/User';
 
 export interface LoginPayload {
-	email: string;
+	username: string;
 	password: string;
 }
 
 const LoginSchema = Yup.object().shape({
-	email: Yup.string().email("Invalid email!").required("Required"),
+	username: Yup.string().min(4, "Username is too short!").required("Required"),
 	password: Yup.string().min(8, "Password is too short!").required("Required"),
 });
 
@@ -29,7 +29,7 @@ const LoginPage: NextPage = () => {
 	return (
 		<DefaultLayout title="Login">
 			<Formik
-				initialValues={{ email: "", password: "" }}
+				initialValues={{ username: "", password: "" }}
 				validationSchema={LoginSchema}
 				onSubmit={(
 					values: LoginPayload,
@@ -61,12 +61,12 @@ const LoginPage: NextPage = () => {
 
 						<div className="w-full">
 							<Field
-								type="email"
-								name="email"
+								type="text"
+								name="username"
 								className="input input-bordered w-full"
 							/>
-							{errors.email && touched.email ? (
-								<div className="text-error">{errors.email}</div>
+							{errors.username && touched.username ? (
+								<div className="text-error">{errors.username}</div>
 							) : null}
 						</div>
 
