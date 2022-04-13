@@ -6,20 +6,22 @@ import * as Yup from 'yup';
 
 import { useAppDispatch } from '../../app/hooks';
 import { DefaultLayout } from '../../components/layouts/DefaultLayout';
-import { useRegisterMutation } from '../../features/auth/auth.api';
 import { setAuth } from '../../features/auth/auth.slice';
+import { useRegisterMutation } from '../../features/user/user.api';
 import { User } from '../../models/User';
 
 export interface RegisterPayload {
 	username: string;
 	password: string;
-    referralCode: string;
+	referralCode: string;
 }
 
 const RegisterSchema = Yup.object().shape({
 	username: Yup.string().min(4, "Username is too short!").required("Required"),
 	password: Yup.string().min(8, "Password is too short!").required("Required"),
-    referralCode: Yup.string().length(8, 'Referral code must be 8 characters!').required('You must be invited to join!')
+	referralCode: Yup.string()
+		.length(8, "Referral code must be 8 characters!")
+		.required("You must be invited to join!"),
 });
 
 const RegisterPage: NextPage = () => {
@@ -31,7 +33,7 @@ const RegisterPage: NextPage = () => {
 	return (
 		<DefaultLayout title="Register">
 			<Formik
-				initialValues={{ username: "", password: "", referralCode: '' }}
+				initialValues={{ username: "", password: "", referralCode: "" }}
 				validationSchema={RegisterSchema}
 				onSubmit={(
 					values: RegisterPayload,
@@ -66,7 +68,7 @@ const RegisterPage: NextPage = () => {
 								type="text"
 								name="username"
 								className="input input-bordered w-full"
-                                placeholder="Username"
+								placeholder="Username"
 							/>
 							{errors.username && touched.username ? (
 								<div className="text-error">{errors.username}</div>
@@ -78,19 +80,19 @@ const RegisterPage: NextPage = () => {
 								type="password"
 								name="password"
 								className="input input-bordered w-full"
-                                placeholder="Password"
+								placeholder="Password"
 							/>
 							{errors.password && touched.password ? (
 								<div className="text-error">{errors.password}</div>
 							) : null}
 						</div>
 
-                        <div className="w-full">
+						<div className="w-full">
 							<Field
 								type="text"
 								name="referralCode"
 								className="input input-bordered w-full"
-                                placeholder="Referral Code"
+								placeholder="Referral Code"
 							/>
 							{errors.referralCode && touched.referralCode ? (
 								<div className="text-error">{errors.referralCode}</div>
